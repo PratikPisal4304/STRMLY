@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "552484623783",
+    "project_id": "strmly-393bc",
+    "storage_bucket": "strmly-393bc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:552484623783:android:f5558b382fcebd02925282",
+        "android_client_info": {
+          "package_name": "com.strmly.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "552484623783-aamguglqrnf38g89gjf06ujrtk61cu7d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjTPyAdbcPhpDExeiDsA_jfdbnRzLFpMw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "552484623783-aamguglqrnf38g89gjf06ujrtk61cu7d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

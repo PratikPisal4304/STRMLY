@@ -1,0 +1,64 @@
+{
+  "expo": {
+    "name": "STRMLY",
+    "slug": "strmly-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "scheme": "com.strmly.app",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.strmly.app",
+      "googleServicesFile": "./GoogleService-Info.plist"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#000000"
+      },
+      "package": "com.strmly.app",
+      "googleServicesFile": "./google-services.json",
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "config": {
+        "firebase": {
+          "apiKey": "AIzaSyCivTGxOkqzCKojnGD4dKOJ0sz2reXKtxE",
+          "authDomain": "strmly-393bc.firebaseapp.com",
+          "projectId": "strmly-393bc",
+          "storageBucket": "strmly-393bc.appspot.com",
+          "messagingSenderId": "552484623783",
+          "appId": "1:552484623783:web:831950ba81268d89925282",
+          "measurementId": "G-KXTNMFZ8BR"
+        }
+      }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "15.1"
+          }
+        }
+      ],
+      "expo-video"
+    ],
+    "newArchEnabled": true,
+    "extra": {
+      "eas": {
+        "projectId": "a574c1ee-0582-475f-bd35-63d861bb6b21"
+      }
+    }
+  }
+}
