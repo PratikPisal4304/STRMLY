@@ -22,18 +22,20 @@ function RootNavigator() {
 
   return (
     <NavigationContainer>
-      {user ? <AppStack /> : <AuthStack />}
+      {/* --- BYPASS LOGIC --- */}
+      {/* To re-enable login, change this back to: {user ? <AppStack /> : <AuthStack />} */}
+      <AppStack />
     </NavigationContainer>
   );
 }
 
 export default function App() {
-  // This hook runs once when the app starts to get the SHA-1 key.
   useEffect(() => {
     const getSha1 = async () => {
       if (Platform.OS === 'android') {
-        const sha1 = await Application.getAndroidSigningCertificateSha1();
-        console.log("Your Expo Go SHA-1 Key is:", sha1);
+        // This will only work in a development build, not Expo Go.
+        // const sha1 = await Application.getAndroidSigningCertificateSha1();
+        // console.log("Your App's SHA-1 Key is:", sha1);
       }
     };
     getSha1();

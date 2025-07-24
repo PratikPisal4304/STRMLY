@@ -1,5 +1,7 @@
+// /src/screens/LoginScreen.js
+
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
@@ -7,18 +9,15 @@ import { auth, db } from '../config/firebaseConfig';
 import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
 
-// This keeps the auth session active in the browser to complete the flow.
 WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen() {
-  // This hook manages the Google authentication flow with your specific keys.
   const [request, response, promptAsync] = Google.useIdTokenAuthRequest({
-    clientId: '552484623783-aamguglqrnf38g89gjf06ujrtk61cu7d.apps.googleusercontent.com',
+    webClientId: '552484623783-aamguglqrnf38g89gjf06ujrtk61cu7d.apps.googleusercontent.com',
     androidClientId: '552484623783-7mjcllio1bl9lesjtkv5ieuqhc5kk6ai.apps.googleusercontent.com',
     iosClientId: '552484623783-iji21h76nvm7ip6uilt34monjj7nd7it.apps.googleusercontent.com',
   });
 
-  // This effect hook handles the response from Google after the user signs in.
   useEffect(() => {
     if (response?.type === 'success') {
       const { id_token } = response.params;
@@ -26,13 +25,10 @@ export default function LoginScreen() {
       
       signInWithCredential(auth, credential)
         .then(async (userCredential) => {
-          // After signing in to Firebase, check if the user is new.
           const userRef = doc(db, 'users', userCredential.user.uid);
           const docSnap = await getDoc(userRef);
 
-          // If the user document doesn't exist, it's their first time signing in.
           if (!docSnap.exists()) {
-            // Create a new document for the user in the 'users' collection in Firestore.
             await setDoc(userRef, {
               uid: userCredential.user.uid,
               displayName: userCredential.user.displayName,
@@ -51,8 +47,12 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>STRMLY</Text>
-      <Text style={styles.subtitle}>Your Next Favorite Clip Awaits</Text>
+      <View style={styles.header}>
+        <Image source={require('../../assets/adaptive-icon.png')} style={styles.logo} />
+        <Text style={styles.title}>Welcome to STRMLY</Text>
+        <Text style={styles.subtitle}>Sign in to discover your next favorite clip.</Text>
+      </View>
+      
       <TouchableOpacity
         style={styles.googleButton}
         onPress={() => promptAsync()}
@@ -67,6 +67,10 @@ export default function LoginScreen() {
           </>
         )}
       </TouchableOpacity>
+
+      <Text style={styles.footerText}>
+        By signing in, you agree to our Terms of Service and Privacy Policy.
+      </Text>
     </View>
   );
 }
@@ -75,28 +79,41 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
+    paddingVertical: 80,
+    paddingHorizontal: 20,
+  },
+  header: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center'
+  },
+  logo: {
+    width: 120,
+    height: 120,
+    marginBottom: 20,
   },
   title: {
-    fontSize: 48,
+    fontSize: 32,
     fontWeight: 'bold',
     color: '#FFF',
     marginBottom: 10,
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 18,
     color: '#AAA',
-    marginBottom: 50,
+    textAlign: 'center',
+    paddingHorizontal: 20,
   },
   googleButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#4285F4',
-    paddingVertical: 12,
+    backgroundColor: '#FF3B5B', // A more vibrant color
+    paddingVertical: 15,
     paddingHorizontal: 30,
-    borderRadius: 8,
+    borderRadius: 30, // Rounded button
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -109,4 +126,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginLeft: 15,
   },
+  footerText: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 40,
+  }
 });

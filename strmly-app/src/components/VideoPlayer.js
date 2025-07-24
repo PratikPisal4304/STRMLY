@@ -1,12 +1,11 @@
 // /src/components/VideoPlayer.js
 
 import React, { useRef, useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, Dimensions } from 'react-native';
-// Updated import from 'expo-video'
-import { Video } from 'expo-video';
+import { View, StyleSheet, TouchableOpacity, Text, Dimensions, Image } from 'react-native';
+import { Video } from 'expo-av';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get('window');
 
 export default function VideoPlayer({ videoData, isCurrentlyVisible }) {
   const videoRef = useRef(null);
@@ -15,15 +14,7 @@ export default function VideoPlayer({ videoData, isCurrentlyVisible }) {
   const [likeCount, setLikeCount] = useState(videoData.likeCount);
 
   useEffect(() => {
-    if (!videoRef.current) return;
-
-    if (isCurrentlyVisible) {
-      // Use the new synchronous `play()` method
-      videoRef.current.play();
-    } else {
-      // Use the new synchronous `pause()` method
-      videoRef.current.pause();
-    }
+    // This logic is now handled by the shouldPlay prop
   }, [isCurrentlyVisible]);
 
   const handleLike = () => {
@@ -31,16 +22,8 @@ export default function VideoPlayer({ videoData, isCurrentlyVisible }) {
     setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
   };
   
-  const togglePlayPause = () => {
-      // The new 'expo-video' provides a getStatusAsync() method for status
-      // For a simple toggle, we can just call play() or pause()
-      // This part of the logic is simplified as the primary control is via visibility
-  }
-
   return (
     <View style={styles.container}>
-      {/* We remove the TouchableOpacity for play/pause on tap to simplify, 
-          since TikTok-like UI doesn't usually have this feature. */}
       <Video
         ref={videoRef}
         style={styles.video}
@@ -48,21 +31,39 @@ export default function VideoPlayer({ videoData, isCurrentlyVisible }) {
         resizeMode="cover"
         isLooping
         isMuted={isMuted}
+        shouldPlay={isCurrentlyVisible}
       />
       
       <View style={styles.overlay}>
-        {/* Mute Button */}
-        <TouchableOpacity style={styles.bottomLeft} onPress={() => setIsMuted(!isMuted)}>
-            <MaterialCommunityIcons name={isMuted ? "volume-off" : "volume-high"} size={28} color="white" />
-        </TouchableOpacity>
+        {/* Left Side: Video Info */}
+        <View style={styles.leftColumn}>
+          <View style={styles.bottomSection}>
+            <Text style={styles.username}>{videoData.user.username}</Text>
+            <Text style={styles.description}>{videoData.description}</Text>
+          </View>
+        </View>
 
-        {/* Right side icons */}
+        {/* Right Side: Action Buttons */}
         <View style={styles.rightColumn}>
+          <Image source={{ uri: videoData.user.avatarUrl }} style={styles.avatar} />
           <TouchableOpacity style={styles.iconContainer} onPress={handleLike}>
             <MaterialCommunityIcons name={isLiked ? "heart" : "heart-outline"} size={35} color={isLiked ? "#FF3B5B" : "white"} />
-            <Text style={styles.iconText}>{likeCount}</Text>
+            <Text style={styles.iconText}>{likeCount.toLocaleString()}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconContainer}>
+            <MaterialCommunityIcons name="comment-processing-outline" size={35} color="white" />
+            <Text style={styles.iconText}>{videoData.commentCount.toLocaleString()}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconContainer}>
+            <MaterialCommunityIcons name="share" size={35} color="white" />
+            <Text style={styles.iconText}>{videoData.shareCount.toLocaleString()}</Text>
           </TouchableOpacity>
         </View>
+
+        {/* Mute Button in corner */}
+        <TouchableOpacity style={styles.muteButton} onPress={() => setIsMuted(!isMuted)}>
+            <MaterialCommunityIcons name={isMuted ? "volume-off" : "volume-high"} size={22} color="rgba(255, 255, 255, 0.8)" />
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -70,7 +71,7 @@ export default function VideoPlayer({ videoData, isCurrentlyVisible }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT,
     backgroundColor: '#000',
   },
@@ -79,19 +80,39 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-end',
+    flexDirection: 'row',
   },
-  bottomLeft: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
+  leftColumn: {
+    flex: 1,
+    justifyContent: 'flex-end',
     padding: 10,
   },
   rightColumn: {
-    position: 'absolute',
-    bottom: 80,
-    right: 10,
+    width: 80,
+    justifyContent: 'center',
     alignItems: 'center',
+    paddingBottom: 60,
+  },
+  bottomSection: {
+    paddingBottom: 60,
+  },
+  username: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  description: {
+    color: 'white',
+    fontSize: 14,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: 'white',
+    marginBottom: 30,
   },
   iconContainer: {
     alignItems: 'center',
@@ -103,4 +124,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
+  muteButton: {
+      position: 'absolute',
+      bottom: 20,
+      left: 20,
+      padding: 10,
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      borderRadius: 20
+  }
 });

@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "552484623783-4mmp5u8j4to8u8q98t8q00b0b6seq8bb.apps.googleusercontent.com",
+          "client_id": "552484623783-1l9qeomfif2a1mcdktnd6ji99fmipp21.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.strmly.app",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+            "certificate_hash": "0d2cccfa436d5abf9535e8ae07e3a9ff678add59"
           }
         },
         {

@@ -4,21 +4,53 @@ import React, { useState, useCallback } from 'react';
 import { View, StyleSheet, FlatList, Dimensions, ActivityIndicator } from 'react-native';
 import VideoPlayer from '../components/VideoPlayer';
 
+// Expanded data to include user info, description, etc.
 const videoData = [
-  { id: '1', videoUrl: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4', likeCount: 1234 },
-  { id: '2', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4', likeCount: 5678 },
-  { id: '3', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', likeCount: 9101 },
-  { id: '4', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4', likeCount: 1121 },
-  { id: '5', videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4', likeCount: 3141 },
+  { 
+    id: '1', 
+    videoUrl: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4', 
+    likeCount: 1234, 
+    commentCount: 152,
+    shareCount: 289,
+    user: {
+      username: '@naturelover',
+      avatarUrl: 'https://i.pravatar.cc/150?u=naturelover',
+    },
+    description: 'Enjoying the beautiful scenery with Big Buck Bunny! 🐰 #nature #animation'
+  },
+  { 
+    id: '2', 
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4', 
+    likeCount: 5678,
+    commentCount: 890,
+    shareCount: 120,
+    user: {
+      username: '@funtimes',
+      avatarUrl: 'https://i.pravatar.cc/150?u=funtimes',
+    },
+    description: 'Having a blast with the crew! 🎉 #fun #friends'
+  },
+  { 
+    id: '3', 
+    videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', 
+    likeCount: 9101,
+    commentCount: 453,
+    shareCount: 302,
+    user: {
+      username: '@adventureseeker',
+      avatarUrl: 'https://i.pravatar.cc/150?u=adventureseeker',
+    },
+    description: 'Epic escapes and wild adventures. #travel #explore'
+  },
 ];
 
 const { height } = Dimensions.get('window');
 
 export default function HomeScreen() {
-  const [currentlyVisibleId, setCurrentlyVisibleId] = useState(null);
+  const [currentlyVisibleId, setCurrentlyVisibleId] = useState(videoData.length > 0 ? videoData[0].id : null);
 
   const viewabilityConfig = {
-    viewAreaCoveragePercentThreshold: 90, // Item is considered visible when 90% of it is visible
+    itemVisiblePercentThreshold: 90,
   };
 
   const onViewableItemsChanged = useCallback(({ viewableItems }) => {
